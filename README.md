@@ -1,0 +1,1 @@
+# Calculadora-de-Escalonados-HQS
