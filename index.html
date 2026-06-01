@@ -1,16 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Escalonados HQS Energy</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Escalonados HQS</title>
+  <style>
+    :root{--bg:#f7fbff;--card:#ffffff;--ink:#0a2540;--muted:#607086;--turq:#00aeca;--gold:#f6b21a;--line:#dfeaf3;--shadow:0 24px 70px rgba(10,37,64,.12)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at top left, rgba(0,174,202,.18), transparent 34%),linear-gradient(135deg,#ffffff 0%,var(--bg) 52%,#edf7ff 100%);color:var(--ink);min-height:100vh;padding:28px}
+    .app{max-width:1120px;margin:0 auto}
+    .hero{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:32px;box-shadow:var(--shadow);padding:34px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center}
+    .brand{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--turq);font-weight:800}
+    h1{font-size:clamp(34px,6vw,64px);line-height:.95;margin:14px 0 16px}
+    .copy{font-size:18px;color:var(--muted);line-height:1.55;max-width:650px}
+    .panel{background:var(--ink);color:white;border-radius:26px;padding:24px;box-shadow:0 18px 50px rgba(10,37,64,.22)}
+    label{display:block;font-size:13px;font-weight:700;margin-bottom:16px;color:rgba(255,255,255,.8)}
+    input,select{width:100%;margin-top:8px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:white;border-radius:16px;padding:15px 16px;font-size:18px;outline:none}
+    select option{color:#111}.money{position:relative}.money span{position:absolute;left:16px;top:45px;font-size:18px;color:white}.money input{padding-left:34px}
+    button{width:100%;border:0;border-radius:16px;padding:16px 18px;font-weight:900;font-size:15px;color:var(--ink);background:linear-gradient(135deg,var(--gold),#ffd776);cursor:pointer}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 12px 35px rgba(10,37,64,.08)}.card span{display:block;color:var(--muted);font-size:13px;font-weight:700;margin-bottom:10px}.card strong{font-size:26px}
+    .tableCard{background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}.tableTop{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:26px}.tableTop h2{margin:4px 0 0;font-size:26px}.copyBtn{width:auto;background:#eef9fb;color:var(--turq);padding:12px 16px}
+    table{width:100%;border-collapse:collapse}th,td{padding:16px 22px;text-align:right;border-top:1px solid var(--line)}th:first-child,td:first-child{text-align:left}th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f9fcff}td{font-size:15px}.note{color:var(--muted);font-size:13px;margin:18px 4px}
+    @media(max-width:850px){body{padding:14px}.hero{grid-template-columns:1fr;padding:24px;border-radius:24px}.cards{grid-template-columns:1fr 1fr}.tableTop{display:block}.copyBtn{margin-top:16px;width:100%}th,td{padding:13px 12px}}
+    @media(max-width:520px){.cards{grid-template-columns:1fr}h1{font-size:38px}}
+  </style>
 </head>
 <body>
-
-<h1>Calculadora de Escalonados HQS Energy</h1>
-
-<script src="script.js"></script>
-
+  <main class="app">
+    <section class="hero">
+      <div>
+        <div class="brand">HQS Energy · Herramienta para vendedores</div>
+        <h1>Calculadora de Escalonados</h1>
+        <p class="copy">Proyecta pagos mensuales con escaladores de 1.99% y 2.99% en términos de 15 o 25 años. Diseñada para explicar números claros frente al cliente.</p>
+      </div>
+      <form class="panel" id="form">
+        <label class="money">Pago inicial mensual<span>$</span><input id="payment" type="number" step="0.01" value="149.59"></label>
+        <label>Escalador anual<select id="rate"><option value="1.99">1.99%</option><option value="2.99">2.99%</option></select></label>
+        <label>Término<select id="years"><option value="15">15 años</option><option value="25" selected>25 años</option></select></label>
+        <button>Calcular proyección</button>
+      </form>
+    </section>
+    <section class="cards">
+      <article class="card"><span>Pago inicial</span><strong id="start">$149.59</strong></article>
+      <article class="card"><span>Pago final</span><strong id="end">$0.00</strong></article>
+      <article class="card"><span>Promedio mensual</span><strong id="avg">$0.00</strong></article>
+      <article class="card"><span>Total estimado</span><strong id="total">$0.00</strong></article>
+    </section>
+    <section class="tableCard">
+      <div class="tableTop"><div><div class="brand">Desglose anual</div><h2 id="title">Escalador 1.99% · 25 años</h2></div><button class="copyBtn" id="copy" type="button">Copiar tabla</button></div>
+      <table><thead><tr><th>Año</th><th>Pago mensual</th><th>Aumento anual</th><th>Total anual</th></tr></thead><tbody id="body"></tbody></table>
+    </section>
+    <p class="note">Vista previa local. Los valores se redondean a centavos y se recalculan al cambiar los campos.</p>
+  </main>
+<script>
+const fmt = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'});
+const form = document.getElementById('form'), paymentEl = document.getElementById('payment'), rateEl = document.getElementById('rate'), yearsEl = document.getElementById('years'), tbody = document.getElementById('body');
+function calculate(){
+  const start = Number(paymentEl.value || 0), rate = Number(rateEl.value) / 100, years = Number(yearsEl.value);
+  let rows = [], monthly = start, total = 0;
+  for(let y=1;y<=years;y++){if(y>1) monthly = monthly * (1 + rate); const previous = y === 1 ? null : rows[y-2].monthly; const increase = previous === null ? null : monthly - previous; const annual = monthly * 12; total += annual; rows.push({year:y, monthly, increase, annual});}
+  document.getElementById('start').textContent = fmt.format(start); document.getElementById('end').textContent = fmt.format(rows[rows.length-1].monthly); document.getElementById('avg').textContent = fmt.format(total / (years * 12)); document.getElementById('total').textContent = fmt.format(total); document.getElementById('title').textContent = `Escalador ${rateEl.value}% · ${years} años`;
+  tbody.innerHTML = rows.map(r => `<tr><td>${r.year}</td><td>${fmt.format(r.monthly)}</td><td>${r.increase === null ? '—' : fmt.format(r.increase)}</td><td>${fmt.format(r.annual)}</td></tr>`).join('');
+}
+form.addEventListener('submit', e => { e.preventDefault(); calculate(); });
+[paymentEl, rateEl, yearsEl].forEach(el => el.addEventListener('input', calculate));
+document.getElementById('copy').addEventListener('click', async () => { const text = [...document.querySelectorAll('tbody tr')].map(tr => [...tr.children].map(td => td.textContent).join('\\t')).join('\\n'); await navigator.clipboard.writeText('Año\\tPago mensual\\tAumento anual\\tTotal anual\\n' + text); document.getElementById('copy').textContent = 'Copiado'; setTimeout(()=>document.getElementById('copy').textContent='Copiar tabla',1200);});
+calculate();
+</script>
 </body>
 </html>
